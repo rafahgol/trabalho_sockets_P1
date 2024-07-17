@@ -39,6 +39,19 @@ def soma_subtracao_complemento_2(num1, num2, operacao):
 
     return decimal_to_complemento_2(resultado), overflow
 
+def divisao_complemento_2(num1, num2):
+    divisor = complemento_2_to_decimal(num2)
+    if divisor == 0:
+        return "Erro: Divisão por zero", False
+
+    resultado = complemento_2_to_decimal(num1) // divisor
+    overflow = False
+    if resultado > 127 or resultado < -128:
+        overflow = True
+        resultado = resultado & 0xFF  # Mantém apenas os 8 bits menos significativos
+
+    return decimal_to_complemento_2(resultado), overflow
+
 def iniciar_servidor():
     servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     servidor.bind(('localhost', 12345))
@@ -50,7 +63,7 @@ def iniciar_servidor():
         print(f"Conexão estabelecida com {endereco}")
 
         while True:
-            cliente_socket.send(b"Digite 1 para converter um numero, 2 para somar/subtrair numeros binarios ou 0 para encerrar: ")
+            cliente_socket.send(b"Digite 1 para converter um numero, 2 para somar/subtrair numeros binarios, 3 para dividir numeros binarios ou 0 para encerrar: ")
             escolha = cliente_socket.recv(1024).decode()
 
             if escolha == '1':
@@ -76,6 +89,16 @@ def iniciar_servidor():
                 num2 = cliente_socket.recv(1024).decode()
 
                 resultado, overflow = soma_subtracao_complemento_2(num1, num2, operacao)
+                mensagem = f"Resultado: {resultado}. Overflow: {'Sim' if overflow else 'Nao'}."
+                cliente_socket.send(mensagem.encode())
+            elif escolha == '3':
+                cliente_socket.send(b"Digite o primeiro valor binario (8 bits): ")
+                num1 = cliente_socket.recv(1024).decode()
+
+                cliente_socket.send(b"Digite o segundo valor binario (8 bits): ")
+                num2 = cliente_socket.recv(1024).decode()
+
+                resultado, overflow = divisao_complemento_2(num1, num2)
                 mensagem = f"Resultado: {resultado}. Overflow: {'Sim' if overflow else 'Nao'}."
                 cliente_socket.send(mensagem.encode())
             elif escolha == '0':

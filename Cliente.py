@@ -39,6 +39,17 @@ def iniciar_cliente():
 
             resultado = cliente_socket.recv(1024).decode()
             print(resultado)
+        elif escolha == '3':
+            mensagem = cliente_socket.recv(1024).decode()
+            num1 = input(mensagem)
+            cliente_socket.send(num1.encode())
+
+            mensagem = cliente_socket.recv(1024).decode()
+            num2 = input(mensagem)
+            cliente_socket.send(num2.encode())
+
+            resultado = cliente_socket.recv(1024).decode()
+            print(resultado)
         elif escolha == '0':
             mensagem = cliente_socket.recv(1024).decode()
             print(mensagem)
