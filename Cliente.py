@@ -50,6 +50,20 @@ def iniciar_cliente():
 
             resultado = cliente_socket.recv(1024).decode()
             print(resultado)
+        elif escolha == '4':
+            mensagem = cliente_socket.recv(1024).decode()
+            numero = input(mensagem)
+            cliente_socket.send(numero.encode())
+
+            resultado = cliente_socket.recv(1024).decode()
+            print(resultado)
+        elif escolha == '5':
+            mensagem = cliente_socket.recv(1024).decode()
+            string = input(mensagem)
+            cliente_socket.send(string.encode())
+
+            resultado = cliente_socket.recv(1024).decode()
+            print(resultado)
         elif escolha == '0':
             mensagem = cliente_socket.recv(1024).decode()
             print(mensagem)
